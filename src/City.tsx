@@ -1,23 +1,26 @@
 import { GraphQLResult } from '@aws-amplify/api-graphql';
 import { Box, Button, styled } from '@mui/material';
 import { API, graphqlOperation } from 'aws-amplify';
-import { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { CreateCityInput, ListCitiesQuery } from './API';
+import { AppContext } from './AppContext';
 import { createCity } from './graphql/mutations';
 import { listCities } from './graphql/queries';
+import { onCreateCity } from './graphql/subscriptions';
 
 /**
- * 入力欄の形式
+ * 入力欄の状態
  */
-type submitState = {
+type inputState = {
     name: string;
     description: string;
 }
 
-const initiateState: submitState = {
+const initialInput: inputState = {
     name: '',
     description: '',
 }
+
 
 /**
  * スタイル適用済のコンポーネント
@@ -29,40 +32,48 @@ const StyledBox = styled(Box)(({ theme }) => ({
 }))
 
 export const City = () => {
-    const [cities, setCities] = useState<CreateCityInput[]>([]);
-    const [submitState, setSubmitState] = useState<submitState>(initiateState);
+    // Reducerと入力欄の状態
+    const { state, dispatch } = useContext(AppContext);
+    const [input, setInput] = useState(initialInput);
 
     useEffect(() => {
         fetchCities();
     }, [])
 
-    const setInput = (key: string, value: string) => {
-        setSubmitState({ ...submitState, [key]: value })
+    const handleOnChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setInput({ ...input, name: e.target.value });
+    }
+
+    const handleOnChangeDescription = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setInput({ ...input, description: e.target.value });
     }
 
     const fetchCities = async () => {
         try {
+            dispatch({ type: 'ACCESS_START' })
             const citiesData = (
                 await API.graphql(graphqlOperation(listCities))
             ) as GraphQLResult<ListCitiesQuery>
             if (citiesData.data?.listCities?.items) {
-                const city = citiesData.data.listCities.items as CreateCityInput[]
-                setCities(city)
+                const cities = citiesData.data.listCities.items as CreateCityInput[]
+                dispatch({ type: 'FETCH_SUCCESS', cities: cities })
             }
         } catch (err) {
-            console.log('fError fetching cities:', err)
+            console.log('Error fetching cities:', err)
+            dispatch({ type: 'FETCH_ERROR', error: `Error fetching cities: ${err}` })
         }
     }
 
     const addCity = async () => {
         try {
-            if (!submitState.name || !submitState.description) return;
-            const city: CreateCityInput = { ...submitState };
-            setSubmitState(initiateState);
+            if (!input.name || !input.description) return;
+            const city: CreateCityInput = { ...input };
+            setInput(initialInput);
             (await API.graphql(graphqlOperation(createCity, { input: city }))) as GraphQLResult<CreateCityInput>;
-            setCities([...cities, city]);
+            dispatch({ type: 'MUTATE_SUCCESS', city: city });
         } catch (err) {
-            console.log('error adding city:', err);
+            console.log('Error adding city:', err);
+            dispatch({ type: 'MUTATE_ERROR', error: `Error adding city: ${err}` })
         }
     }
 
@@ -70,19 +81,19 @@ export const City = () => {
         <div>
             <Box>
                 <input
-                    onChange={(e) => setInput('name', e.target.value)}
-                    value={submitState.name}
+                    onChange={(e) => handleOnChangeName(e)}
+                    value={input.name}
                     placeholder='名前'
                 />
                 <input
-                    onChange={(e) => setInput('description', e.target.value)}
-                    value={submitState.description}
+                    onChange={(e) => handleOnChangeDescription(e)}
+                    value={input.description}
                     placeholder='説明'
                 />
                 <Button onClick={addCity}>投稿</Button>
             </Box>
             <StyledBox>
-                {cities.map((city, index) => (
+                {state.cities.map((city, index) => (
                     <Box
                         key={city.id ? city.id : index}
                     >
