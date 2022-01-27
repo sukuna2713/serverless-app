@@ -2,7 +2,7 @@ import { GraphQLResult } from '@aws-amplify/api-graphql';
 import { Box, Button, styled } from '@mui/material';
 import { API, graphqlOperation } from 'aws-amplify';
 import React, { useContext, useEffect, useState } from 'react';
-import { CreateCityInput, ListCitiesQuery } from './API';
+import { CreateCityInput, ListCitiesQuery, OnCreateCitySubscription } from './API';
 import { AppContext } from './AppContext';
 import { createCity } from './graphql/mutations';
 import { listCities } from './graphql/queries';
@@ -21,6 +21,10 @@ const initialInput: inputState = {
     description: '',
 }
 
+/**
+ * 投稿されたときのサブスクリプションのイベント
+ */
+type PostSubscriptionEvent = { value: { data: OnCreateCitySubscription } };
 
 /**
  * スタイル適用済のコンポーネント
@@ -37,8 +41,53 @@ export const City = () => {
     const [input, setInput] = useState(initialInput);
 
     useEffect(() => {
+        /**
+     * 最初のデータ取得
+     */
+        const fetchCities = async () => {
+            try {
+                dispatch({ type: 'ACCESS_START' })
+                const citiesData = (
+                    await API.graphql(graphqlOperation(listCities))
+                ) as GraphQLResult<ListCitiesQuery>
+                if (citiesData.data?.listCities?.items) {
+                    const cities = citiesData.data.listCities.items as CreateCityInput[]
+                    dispatch({ type: 'FETCH_SUCCESS', cities: cities })
+                } else {
+                    // データがない場合
+                    dispatch({ type: 'FETCH_SUCCESS', cities: [] })
+                }
+            } catch (err) {
+                console.log('Error fetching cities:', err)
+                dispatch({ type: 'FETCH_ERROR', error: `Error fetching cities: ${err}` })
+            }
+        }
+
+        /**
+         * City追加イベントの購読
+         */
+        const subscribeCities = async () => {
+            try {
+                dispatch({ type: 'ACCESS_START' })
+                const client = API.graphql(graphqlOperation(onCreateCity))
+                if ('subscribe' in client) {
+                    client.subscribe({
+                        next: ({ value: { data } }: PostSubscriptionEvent) => {
+                            if (data.onCreateCity) {
+                                const city: CreateCityInput = data.onCreateCity;
+                                dispatch({ type: 'SUBSCRIPTION_SUCCESS', city: city });
+                            }
+                        }
+                    })
+                }
+            } catch (err) {
+                console.log('Error subscribing cities:', err)
+                dispatch({ type: 'SUBSCRIPTION_ERROR', error: `Error subscribing cities: ${err}` })
+            }
+        }
         fetchCities();
-    }, [])
+        subscribeCities();
+    }, [dispatch])
 
     const handleOnChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
         setInput({ ...input, name: e.target.value });
@@ -48,29 +97,13 @@ export const City = () => {
         setInput({ ...input, description: e.target.value });
     }
 
-    const fetchCities = async () => {
-        try {
-            dispatch({ type: 'ACCESS_START' })
-            const citiesData = (
-                await API.graphql(graphqlOperation(listCities))
-            ) as GraphQLResult<ListCitiesQuery>
-            if (citiesData.data?.listCities?.items) {
-                const cities = citiesData.data.listCities.items as CreateCityInput[]
-                dispatch({ type: 'FETCH_SUCCESS', cities: cities })
-            }
-        } catch (err) {
-            console.log('Error fetching cities:', err)
-            dispatch({ type: 'FETCH_ERROR', error: `Error fetching cities: ${err}` })
-        }
-    }
-
     const addCity = async () => {
         try {
             if (!input.name || !input.description) return;
             const city: CreateCityInput = { ...input };
             setInput(initialInput);
             (await API.graphql(graphqlOperation(createCity, { input: city }))) as GraphQLResult<CreateCityInput>;
-            dispatch({ type: 'MUTATE_SUCCESS', city: city });
+            dispatch({ type: 'MUTATE_SUCCESS' });
         } catch (err) {
             console.log('Error adding city:', err);
             dispatch({ type: 'MUTATE_ERROR', error: `Error adding city: ${err}` })

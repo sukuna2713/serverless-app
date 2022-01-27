@@ -8,3 +8,4 @@ type City @model {
   description: String
   location: String
 }
+

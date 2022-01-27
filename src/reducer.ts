@@ -15,13 +15,22 @@ export const reducer = (state: CityState, action: Action): CityState => (
             loading: false,
             error: selection,
         }))
-        .with({ type: 'MUTATE_SUCCESS', city: select() }, (selection) => ({
+        .with({ type: 'MUTATE_SUCCESS' }, () => ({
             ...state,
             loading: false,
             error: '',
-            cities: [selection, ...state.cities]
         }))
         .with({ type: 'MUTATE_ERROR', error: select() }, (selection) => ({
+            ...state,
+            loading: false,
+            error: selection,
+        }))
+        .with({ type: 'SUBSCRIPTION_SUCCESS', city: select() }, (selection) => ({
+            ...state,
+            loading: false,
+            cities: [selection, ...state.cities]
+        }))
+        .with({ type: 'SUBSCRIPTION_ERROR', error: select() }, (selection) => ({
             ...state,
             loading: false,
             error: selection,
