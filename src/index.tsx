@@ -5,7 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import Amplify from 'aws-amplify';
 import awsconfig from './aws-exports'
-import { ProvideAuth } from 'use-auth';
+import { ProvideAuth } from 'Auth/use-auth';
 
 Amplify.configure(awsconfig)
 

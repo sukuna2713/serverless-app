@@ -1,5 +1,7 @@
-import React, { useEffect, useState, useContext, createContext } from 'react';
+import React, { useEffect, useContext, createContext, useReducer } from 'react';
 import { Auth } from 'aws-amplify';
+import { reducer } from './reducer';
+import { initiateState } from './initiateState';
 
 /**
  * 認証画面に必要な要素のインターフェイス
@@ -45,25 +47,21 @@ export const useAuth = () => {
  * 通常の認証ロジック
  */
 const useProvideAuth = (): UseAuth => {
-    const [isLoading, setIsLoading] = useState(true)
-    const [isAuthenticated, setIsAuthenticated] = useState(false)
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
+    const [state, dispatch] = useReducer(reducer, initiateState)
 
     useEffect(() => {
         // 最初の認証確認
+        dispatch({ type: 'ACCESS_START' });
         Auth.currentAuthenticatedUser()
             .then(() => {
                 // ログイン済みのとき
-                setIsAuthenticated(true)
-                setIsLoading(false)
+                dispatch({ type: 'AUTHENTICATED' })
             })
             .catch(() => {
                 // 未ログインのとき
-                setIsAuthenticated(false)
-                setIsLoading(false)
+                dispatch({ type: 'NOT_AUTHENTICATED' })
             })
-    }, [])
+    }, [dispatch])
 
     const signUp = (
         email: string,
@@ -75,14 +73,14 @@ const useProvideAuth = (): UseAuth => {
             password: password,
         })
             .then(() => {
-                setEmail(email)
-                setPassword(password)
+                dispatch({ type: 'SIGNUP_SUCCESS', email: email, password: password })
                 callback({ isSuccessed: true, message: '' })
             })
             .catch(() => {
+                dispatch({ type: 'SIGNUP_FAILED', error: 'failed to sign up' })
                 callback({
                     isSuccessed: false,
-                    message: 'failed to authenticate.',
+                    message: 'failed to sign up.',
                 })
             })
     }
@@ -91,16 +89,16 @@ const useProvideAuth = (): UseAuth => {
         verificationCode: string,
         callback: (r: Result) => void
     ) => {
-        Auth.confirmSignUp(email, verificationCode)
+        Auth.confirmSignUp(state.email, verificationCode)
             .then(() => {
-                signIn(email, password, callback)
-                setPassword('')
+                signIn(state.email, state.password, callback)
+                dispatch({ type: 'CONFILM_SUCCESS' })
             })
             .catch(() => {
-                setPassword('')
+                dispatch({ type: 'CONFILM_FAILED', error: 'failed to confilm verification code' })
                 callback({
                     isSuccessed: false,
-                    message: 'failed to authenticate.',
+                    message: 'failed to confilm verification code',
                 })
             })
     }
@@ -112,14 +110,14 @@ const useProvideAuth = (): UseAuth => {
     ) => {
         Auth.signIn(email, password)
             .then(() => {
-                setEmail(email)
-                setIsAuthenticated(true)
+                dispatch({ type: 'SIGNIN_SUCCESS', email: email })
                 callback({ isSuccessed: true, message: '' })
             })
             .catch(() => {
+                dispatch({ type: 'SIGNIN_FAILED', error: 'failed to sign in' })
                 callback({
                     isSuccessed: false,
-                    message: 'failed to authenticate.',
+                    message: 'failed to sign in',
                 })
             })
     }
@@ -127,22 +125,22 @@ const useProvideAuth = (): UseAuth => {
     const signOut = (callback: (r: Result) => void) => {
         Auth.signOut()
             .then(() => {
-                setEmail('')
-                setIsAuthenticated(false)
+                dispatch({ type: 'SIGNOUT_SUCCESS' })
                 callback({ isSuccessed: true, message: '' })
             })
             .catch(() => {
+                dispatch({ type: 'SIGNOUT_FAILED', error: 'failed to sign out' })
                 callback({
                     isSuccessed: false,
-                    message: 'failed to logout.',
+                    message: 'failed to sign out.',
                 })
             })
     }
 
     return {
-        isLoading,
-        isAuthenticated,
-        email,
+        isLoading: state.isLoading,
+        isAuthenticated: state.isAuthenticated,
+        email: state.email,
         signUp,
         confirmSignUp,
         signIn,

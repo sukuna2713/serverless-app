@@ -12,7 +12,7 @@ import { LockOutlined } from "@mui/icons-material";
 import { Typography } from "@mui/material";
 import { styled } from "@mui/material";
 import { Container } from "@mui/material";
-import { Copyright } from "./Copyright";
+import { Copyright } from "../Copyright";
 
 /**
  * スタイル適用済のコンポーネント達

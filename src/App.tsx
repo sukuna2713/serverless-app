@@ -1,9 +1,9 @@
+import { PrivateRoute } from 'Auth/PrivateRoute';
+import { SignIn } from 'Auth/SignIn';
+import { SignUp } from 'Auth/SignUp';
 import { NotFoundPage } from 'NotFoundPage';
-import { PrivateRoute } from 'PrivateRoute';
 import { useReducer } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { SignIn } from 'SignIn';
-import { SignUp } from 'SignUp';
 import TopPage from 'TopPage';
 import './App.css';
 import { AppContext } from './AppContext';

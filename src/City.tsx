@@ -1,5 +1,4 @@
 import { GraphQLResult } from '@aws-amplify/api-graphql';
-import { withAuthenticator } from '@aws-amplify/ui-react';
 import { Box, Button, styled } from '@mui/material';
 import { API, graphqlOperation } from 'aws-amplify';
 import React, { useContext, useEffect, useState } from 'react';
