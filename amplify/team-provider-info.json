@@ -10,6 +10,11 @@
       "StackName": "amplify-serverlessapp-dev-135555",
       "StackId": "arn:aws:cloudformation:ap-northeast-1:501002473714:stack/amplify-serverlessapp-dev-135555/866d8fc0-7de6-11ec-bae7-0eb7fc994d17",
       "AmplifyAppId": "d3vb40mhoj5kur"
+    },
+    "categories": {
+      "auth": {
+        "serverlessapp281e516a": {}
+      }
     }
   }
 }

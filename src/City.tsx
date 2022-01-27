@@ -1,4 +1,5 @@
 import { GraphQLResult } from '@aws-amplify/api-graphql';
+import { withAuthenticator } from '@aws-amplify/ui-react';
 import { Box, Button, styled } from '@mui/material';
 import { API, graphqlOperation } from 'aws-amplify';
 import React, { useContext, useEffect, useState } from 'react';
@@ -35,7 +36,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
     overflow: 'auto'
 }))
 
-export const City = () => {
+const City = () => {
     // Reducerと入力欄の状態
     const { state, dispatch } = useContext(AppContext);
     const [input, setInput] = useState(initialInput);
@@ -138,3 +139,5 @@ export const City = () => {
         </div>
     )
 }
+
+export default City;
