@@ -2,20 +2,24 @@
 /* eslint-disable */
 //  This file was automatically generated and should not be edited.
 
-export type CreateCityInput = {
+export type CreateMessageInput = {
   id?: string | null,
   name: string,
-  description?: string | null,
-  location?: string | null,
+  owner?: string | null,
+  text: string,
+  updatedAt?: string | null,
+  createdAt?: string | null,
 };
 
-export type ModelCityConditionInput = {
+export type ModelMessageConditionInput = {
   name?: ModelStringInput | null,
-  description?: ModelStringInput | null,
-  location?: ModelStringInput | null,
-  and?: Array< ModelCityConditionInput | null > | null,
-  or?: Array< ModelCityConditionInput | null > | null,
-  not?: ModelCityConditionInput | null,
+  owner?: ModelStringInput | null,
+  text?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
+  createdAt?: ModelStringInput | null,
+  and?: Array< ModelMessageConditionInput | null > | null,
+  or?: Array< ModelMessageConditionInput | null > | null,
+  not?: ModelMessageConditionInput | null,
 };
 
 export type ModelStringInput = {
@@ -58,35 +62,39 @@ export type ModelSizeInput = {
   between?: Array< number | null > | null,
 };
 
-export type City = {
-  __typename: "City",
+export type Message = {
+  __typename: "Message",
   id: string,
   name: string,
-  description?: string | null,
-  location?: string | null,
-  createdAt: string,
-  updatedAt: string,
+  owner?: string | null,
+  text: string,
+  updatedAt?: string | null,
+  createdAt?: string | null,
 };
 
-export type UpdateCityInput = {
+export type UpdateMessageInput = {
   id: string,
   name?: string | null,
-  description?: string | null,
-  location?: string | null,
+  owner?: string | null,
+  text?: string | null,
+  updatedAt?: string | null,
+  createdAt?: string | null,
 };
 
-export type DeleteCityInput = {
+export type DeleteMessageInput = {
   id: string,
 };
 
-export type ModelCityFilterInput = {
+export type ModelMessageFilterInput = {
   id?: ModelIDInput | null,
   name?: ModelStringInput | null,
-  description?: ModelStringInput | null,
-  location?: ModelStringInput | null,
-  and?: Array< ModelCityFilterInput | null > | null,
-  or?: Array< ModelCityFilterInput | null > | null,
-  not?: ModelCityFilterInput | null,
+  owner?: ModelStringInput | null,
+  text?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
+  createdAt?: ModelStringInput | null,
+  and?: Array< ModelMessageFilterInput | null > | null,
+  or?: Array< ModelMessageFilterInput | null > | null,
+  not?: ModelMessageFilterInput | null,
 };
 
 export type ModelIDInput = {
@@ -105,133 +113,133 @@ export type ModelIDInput = {
   size?: ModelSizeInput | null,
 };
 
-export type ModelCityConnection = {
-  __typename: "ModelCityConnection",
-  items:  Array<City | null >,
+export type ModelMessageConnection = {
+  __typename: "ModelMessageConnection",
+  items:  Array<Message | null >,
   nextToken?: string | null,
 };
 
-export type CreateCityMutationVariables = {
-  input: CreateCityInput,
-  condition?: ModelCityConditionInput | null,
+export type CreateMessageMutationVariables = {
+  input: CreateMessageInput,
+  condition?: ModelMessageConditionInput | null,
 };
 
-export type CreateCityMutation = {
-  createCity?:  {
-    __typename: "City",
+export type CreateMessageMutation = {
+  createMessage?:  {
+    __typename: "Message",
     id: string,
     name: string,
-    description?: string | null,
-    location?: string | null,
-    createdAt: string,
-    updatedAt: string,
+    owner?: string | null,
+    text: string,
+    updatedAt?: string | null,
+    createdAt?: string | null,
   } | null,
 };
 
-export type UpdateCityMutationVariables = {
-  input: UpdateCityInput,
-  condition?: ModelCityConditionInput | null,
+export type UpdateMessageMutationVariables = {
+  input: UpdateMessageInput,
+  condition?: ModelMessageConditionInput | null,
 };
 
-export type UpdateCityMutation = {
-  updateCity?:  {
-    __typename: "City",
+export type UpdateMessageMutation = {
+  updateMessage?:  {
+    __typename: "Message",
     id: string,
     name: string,
-    description?: string | null,
-    location?: string | null,
-    createdAt: string,
-    updatedAt: string,
+    owner?: string | null,
+    text: string,
+    updatedAt?: string | null,
+    createdAt?: string | null,
   } | null,
 };
 
-export type DeleteCityMutationVariables = {
-  input: DeleteCityInput,
-  condition?: ModelCityConditionInput | null,
+export type DeleteMessageMutationVariables = {
+  input: DeleteMessageInput,
+  condition?: ModelMessageConditionInput | null,
 };
 
-export type DeleteCityMutation = {
-  deleteCity?:  {
-    __typename: "City",
+export type DeleteMessageMutation = {
+  deleteMessage?:  {
+    __typename: "Message",
     id: string,
     name: string,
-    description?: string | null,
-    location?: string | null,
-    createdAt: string,
-    updatedAt: string,
+    owner?: string | null,
+    text: string,
+    updatedAt?: string | null,
+    createdAt?: string | null,
   } | null,
 };
 
-export type GetCityQueryVariables = {
+export type GetMessageQueryVariables = {
   id: string,
 };
 
-export type GetCityQuery = {
-  getCity?:  {
-    __typename: "City",
+export type GetMessageQuery = {
+  getMessage?:  {
+    __typename: "Message",
     id: string,
     name: string,
-    description?: string | null,
-    location?: string | null,
-    createdAt: string,
-    updatedAt: string,
+    owner?: string | null,
+    text: string,
+    updatedAt?: string | null,
+    createdAt?: string | null,
   } | null,
 };
 
-export type ListCitiesQueryVariables = {
-  filter?: ModelCityFilterInput | null,
+export type ListMessagesQueryVariables = {
+  filter?: ModelMessageFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
 };
 
-export type ListCitiesQuery = {
-  listCities?:  {
-    __typename: "ModelCityConnection",
+export type ListMessagesQuery = {
+  listMessages?:  {
+    __typename: "ModelMessageConnection",
     items:  Array< {
-      __typename: "City",
+      __typename: "Message",
       id: string,
       name: string,
-      description?: string | null,
-      location?: string | null,
-      createdAt: string,
-      updatedAt: string,
+      owner?: string | null,
+      text: string,
+      updatedAt?: string | null,
+      createdAt?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
 };
 
-export type OnCreateCitySubscription = {
-  onCreateCity?:  {
-    __typename: "City",
+export type OnCreateMessageSubscription = {
+  onCreateMessage?:  {
+    __typename: "Message",
     id: string,
     name: string,
-    description?: string | null,
-    location?: string | null,
-    createdAt: string,
-    updatedAt: string,
+    owner?: string | null,
+    text: string,
+    updatedAt?: string | null,
+    createdAt?: string | null,
   } | null,
 };
 
-export type OnUpdateCitySubscription = {
-  onUpdateCity?:  {
-    __typename: "City",
+export type OnUpdateMessageSubscription = {
+  onUpdateMessage?:  {
+    __typename: "Message",
     id: string,
     name: string,
-    description?: string | null,
-    location?: string | null,
-    createdAt: string,
-    updatedAt: string,
+    owner?: string | null,
+    text: string,
+    updatedAt?: string | null,
+    createdAt?: string | null,
   } | null,
 };
 
-export type OnDeleteCitySubscription = {
-  onDeleteCity?:  {
-    __typename: "City",
+export type OnDeleteMessageSubscription = {
+  onDeleteMessage?:  {
+    __typename: "Message",
     id: string,
     name: string,
-    description?: string | null,
-    location?: string | null,
-    createdAt: string,
-    updatedAt: string,
+    owner?: string | null,
+    text: string,
+    updatedAt?: string | null,
+    createdAt?: string | null,
   } | null,
 };

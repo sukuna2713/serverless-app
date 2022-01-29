@@ -1,5 +1,7 @@
-export const initiateState: CityState = {
+import { CreateMessageInput } from "API";
+
+export const initiateState: MessageState = {
     loading: false,
     error: '',
-    cities: []
+    messages: [] as CreateMessageInput[]
 }

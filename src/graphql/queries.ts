@@ -2,32 +2,32 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const getCity = /* GraphQL */ `
-  query GetCity($id: ID!) {
-    getCity(id: $id) {
+export const getMessage = /* GraphQL */ `
+  query GetMessage($id: ID!) {
+    getMessage(id: $id) {
       id
       name
-      description
-      location
-      createdAt
+      owner
+      text
       updatedAt
+      createdAt
     }
   }
 `;
-export const listCities = /* GraphQL */ `
-  query ListCities(
-    $filter: ModelCityFilterInput
+export const listMessages = /* GraphQL */ `
+  query ListMessages(
+    $filter: ModelMessageFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listCities(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listMessages(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         name
-        description
-        location
-        createdAt
+        owner
+        text
         updatedAt
+        createdAt
       }
       nextToken
     }

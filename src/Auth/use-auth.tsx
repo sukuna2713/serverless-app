@@ -9,8 +9,10 @@ import { initiateState } from './initiateState';
 interface UseAuth {
     isLoading: boolean
     isAuthenticated: boolean
+    username: string
     email: string
     signUp: (
+        username: string,
         email: string,
         password: string,
         callback: (r: Result) => void
@@ -20,7 +22,7 @@ interface UseAuth {
         callback: (r: Result) => void
     ) => void
     signIn: (
-        email: string,
+        username: string,
         password: string,
         callback: (r: Result) => void
     ) => void
@@ -64,16 +66,20 @@ const useProvideAuth = (): UseAuth => {
     }, [dispatch])
 
     const signUp = (
+        username: string,
         email: string,
         password: string,
         callback: (r: Result) => void
     ) => {
         Auth.signUp({
-            username: email,
+            username: username,
             password: password,
+            attributes: {
+                email: email,
+            }
         })
             .then(() => {
-                dispatch({ type: 'SIGNUP_SUCCESS', email: email, password: password })
+                dispatch({ type: 'SIGNUP_SUCCESS', username: username, email: email, password: password })
                 callback({ isSuccessed: true, message: '' })
             })
             .catch(() => {
@@ -89,9 +95,9 @@ const useProvideAuth = (): UseAuth => {
         verificationCode: string,
         callback: (r: Result) => void
     ) => {
-        Auth.confirmSignUp(state.email, verificationCode)
+        Auth.confirmSignUp(state.username, verificationCode)
             .then(() => {
-                signIn(state.email, state.password, callback)
+                signIn(state.username, state.password, callback)
                 dispatch({ type: 'CONFILM_SUCCESS' })
             })
             .catch(() => {
@@ -104,13 +110,13 @@ const useProvideAuth = (): UseAuth => {
     }
 
     const signIn = (
-        email: string,
+        username: string,
         password: string,
         callback: (r: Result) => void
     ) => {
-        Auth.signIn(email, password)
+        Auth.signIn(username, password)
             .then(() => {
-                dispatch({ type: 'SIGNIN_SUCCESS', email: email })
+                dispatch({ type: 'SIGNIN_SUCCESS', username: username })
                 callback({ isSuccessed: true, message: '' })
             })
             .catch(() => {
@@ -140,6 +146,7 @@ const useProvideAuth = (): UseAuth => {
     return {
         isLoading: state.isLoading,
         isAuthenticated: state.isAuthenticated,
+        username: state.username,
         email: state.email,
         signUp,
         confirmSignUp,

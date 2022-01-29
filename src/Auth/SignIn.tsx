@@ -41,12 +41,12 @@ const StyledSubmit = styled(Button)(({ theme }) => ({
 export const SignIn = () => {
     const auth = useAuth()
     const navigate = useNavigate()
-    const [email, setEmail] = useState('')
+    const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     //サインイン処理
     const executeSignIn = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
-        auth.signIn(email, password, (result) => {
+        auth.signIn(username, password, (result) => {
             if (result.isSuccessed) {
                 //ログイン成功ならマイページに移動
                 navigate('/mypage')
@@ -69,14 +69,14 @@ export const SignIn = () => {
                         required={true}
                         margin="normal"
                         fullWidth
-                        id="email"
-                        label="メールアドレス"
-                        name="email"
-                        autoComplete="email"
+                        id="username"
+                        label="ユーザー名"
+                        name="username"
+                        autoComplete="username"
                         autoFocus
-                        placeholder="test@example.com"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="ユーザー名"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
                     />
                     <TextField
                         variant="outlined"

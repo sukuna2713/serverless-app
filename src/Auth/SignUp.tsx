@@ -43,12 +43,13 @@ const StyledSubmit = styled(Button)(({ theme }) => ({
  */
 const SignUpForm = () => {
     const auth = useAuth()
+    const [username, setUsername] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     //サインアップ処理
     const executeSignUp = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
-        auth.signUp(email, password, () => { })
+        auth.signUp(username, email, password, () => { })
     }
     return (
         <Container component="main" maxWidth="xs">
@@ -62,6 +63,20 @@ const SignUpForm = () => {
                 </Typography>
                 <StyledForm noValidate onSubmit={executeSignUp}>
                     <Grid container spacing={2}>
+                        <Grid item xs={12}>
+                            <TextField
+                                variant='outlined'
+                                required={true}
+                                fullWidth
+                                id="username"
+                                label="ユーザー名"
+                                name="username"
+                                autoComplete="username"
+                                placeholder="ユーザー名"
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                            />
+                        </Grid>
                         <Grid item xs={12}>
                             <TextField
                                 variant='outlined'
@@ -83,7 +98,7 @@ const SignUpForm = () => {
                                 fullWidth
                                 name="password"
                                 id="password"
-                                label="パスワード（8文字以上かつ英数字混合）"
+                                label="パスワード（8文字以上かつ英数字、大文字小文字混合）"
                                 type="password"
                                 autoComplete="current-password"
                                 placeholder="パスワード"

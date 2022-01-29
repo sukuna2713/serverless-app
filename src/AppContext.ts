@@ -1,4 +1,4 @@
 import { createContext, Dispatch } from 'react'
 export const AppContext = createContext(
-    {} as { state: CityState; dispatch: Dispatch<Action> }
+    {} as { state: MessageState; dispatch: Dispatch<Action> }
 )
