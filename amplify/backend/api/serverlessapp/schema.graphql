@@ -8,10 +8,15 @@ type Message @model
     { allow: private, provider: userPools, operations: [read]}
   ]) {
   id: ID!
-  name: String!
   owner: String
+  postType: PostType! @index(name: "sortedByDate", sortKeyFields: ["createdAt"], queryField: "listMessageSortedByDate")
   text: String!
   updatedAt: AWSDateTime
-  createdAt: AWSDateTime
+  createdAt: AWSDateTime!
+}
+
+enum PostType {
+  OPEN
+  SECRET
 }
 

@@ -9,8 +9,8 @@ export const createMessage = /* GraphQL */ `
   ) {
     createMessage(input: $input, condition: $condition) {
       id
-      name
       owner
+      postType
       text
       updatedAt
       createdAt
@@ -24,8 +24,8 @@ export const updateMessage = /* GraphQL */ `
   ) {
     updateMessage(input: $input, condition: $condition) {
       id
-      name
       owner
+      postType
       text
       updatedAt
       createdAt
@@ -39,8 +39,8 @@ export const deleteMessage = /* GraphQL */ `
   ) {
     deleteMessage(input: $input, condition: $condition) {
       id
-      name
       owner
+      postType
       text
       updatedAt
       createdAt

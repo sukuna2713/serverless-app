@@ -28,7 +28,7 @@ export const reducer = (state: MessageState, action: Action): MessageState => (
         .with({ type: 'SUBSCRIPTION_SUCCESS', message: select() }, (selection) => ({
             ...state,
             loading: false,
-            messages: [selection, ...state.messages]
+            messages: [...state.messages, selection]
         }))
         .with({ type: 'SUBSCRIPTION_ERROR', error: select() }, (selection) => ({
             ...state,

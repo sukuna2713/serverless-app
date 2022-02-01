@@ -4,16 +4,22 @@
 
 export type CreateMessageInput = {
   id?: string | null,
-  name: string,
   owner?: string | null,
+  postType: PostType,
   text: string,
   updatedAt?: string | null,
   createdAt?: string | null,
 };
 
+export enum PostType {
+  OPEN = "OPEN",
+  SECRET = "SECRET",
+}
+
+
 export type ModelMessageConditionInput = {
-  name?: ModelStringInput | null,
   owner?: ModelStringInput | null,
+  postType?: ModelPostTypeInput | null,
   text?: ModelStringInput | null,
   updatedAt?: ModelStringInput | null,
   createdAt?: ModelStringInput | null,
@@ -62,20 +68,25 @@ export type ModelSizeInput = {
   between?: Array< number | null > | null,
 };
 
+export type ModelPostTypeInput = {
+  eq?: PostType | null,
+  ne?: PostType | null,
+};
+
 export type Message = {
   __typename: "Message",
   id: string,
-  name: string,
   owner?: string | null,
+  postType: PostType,
   text: string,
   updatedAt?: string | null,
-  createdAt?: string | null,
+  createdAt: string,
 };
 
 export type UpdateMessageInput = {
   id: string,
-  name?: string | null,
   owner?: string | null,
+  postType?: PostType | null,
   text?: string | null,
   updatedAt?: string | null,
   createdAt?: string | null,
@@ -87,8 +98,8 @@ export type DeleteMessageInput = {
 
 export type ModelMessageFilterInput = {
   id?: ModelIDInput | null,
-  name?: ModelStringInput | null,
   owner?: ModelStringInput | null,
+  postType?: ModelPostTypeInput | null,
   text?: ModelStringInput | null,
   updatedAt?: ModelStringInput | null,
   createdAt?: ModelStringInput | null,
@@ -119,6 +130,22 @@ export type ModelMessageConnection = {
   nextToken?: string | null,
 };
 
+export type ModelStringKeyConditionInput = {
+  eq?: string | null,
+  le?: string | null,
+  lt?: string | null,
+  ge?: string | null,
+  gt?: string | null,
+  between?: Array< string | null > | null,
+  beginsWith?: string | null,
+};
+
+export enum ModelSortDirection {
+  ASC = "ASC",
+  DESC = "DESC",
+}
+
+
 export type CreateMessageMutationVariables = {
   input: CreateMessageInput,
   condition?: ModelMessageConditionInput | null,
@@ -128,11 +155,11 @@ export type CreateMessageMutation = {
   createMessage?:  {
     __typename: "Message",
     id: string,
-    name: string,
     owner?: string | null,
+    postType: PostType,
     text: string,
     updatedAt?: string | null,
-    createdAt?: string | null,
+    createdAt: string,
   } | null,
 };
 
@@ -145,11 +172,11 @@ export type UpdateMessageMutation = {
   updateMessage?:  {
     __typename: "Message",
     id: string,
-    name: string,
     owner?: string | null,
+    postType: PostType,
     text: string,
     updatedAt?: string | null,
-    createdAt?: string | null,
+    createdAt: string,
   } | null,
 };
 
@@ -162,11 +189,11 @@ export type DeleteMessageMutation = {
   deleteMessage?:  {
     __typename: "Message",
     id: string,
-    name: string,
     owner?: string | null,
+    postType: PostType,
     text: string,
     updatedAt?: string | null,
-    createdAt?: string | null,
+    createdAt: string,
   } | null,
 };
 
@@ -178,11 +205,11 @@ export type GetMessageQuery = {
   getMessage?:  {
     __typename: "Message",
     id: string,
-    name: string,
     owner?: string | null,
+    postType: PostType,
     text: string,
     updatedAt?: string | null,
-    createdAt?: string | null,
+    createdAt: string,
   } | null,
 };
 
@@ -198,11 +225,36 @@ export type ListMessagesQuery = {
     items:  Array< {
       __typename: "Message",
       id: string,
-      name: string,
       owner?: string | null,
+      postType: PostType,
       text: string,
       updatedAt?: string | null,
-      createdAt?: string | null,
+      createdAt: string,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type ListMessageSortedByDateQueryVariables = {
+  postType: PostType,
+  createdAt?: ModelStringKeyConditionInput | null,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelMessageFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListMessageSortedByDateQuery = {
+  listMessageSortedByDate?:  {
+    __typename: "ModelMessageConnection",
+    items:  Array< {
+      __typename: "Message",
+      id: string,
+      owner?: string | null,
+      postType: PostType,
+      text: string,
+      updatedAt?: string | null,
+      createdAt: string,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -212,11 +264,11 @@ export type OnCreateMessageSubscription = {
   onCreateMessage?:  {
     __typename: "Message",
     id: string,
-    name: string,
     owner?: string | null,
+    postType: PostType,
     text: string,
     updatedAt?: string | null,
-    createdAt?: string | null,
+    createdAt: string,
   } | null,
 };
 
@@ -224,11 +276,11 @@ export type OnUpdateMessageSubscription = {
   onUpdateMessage?:  {
     __typename: "Message",
     id: string,
-    name: string,
     owner?: string | null,
+    postType: PostType,
     text: string,
     updatedAt?: string | null,
-    createdAt?: string | null,
+    createdAt: string,
   } | null,
 };
 
@@ -236,10 +288,10 @@ export type OnDeleteMessageSubscription = {
   onDeleteMessage?:  {
     __typename: "Message",
     id: string,
-    name: string,
     owner?: string | null,
+    postType: PostType,
     text: string,
     updatedAt?: string | null,
-    createdAt?: string | null,
+    createdAt: string,
   } | null,
 };

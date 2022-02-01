@@ -6,7 +6,9 @@ generates:
     plugins:
       - "typescript"
       - "typescript-operations"
-      - "typed-document-node"
+      - "typescript-react-apollo"
     config:
-      scalars:
-        AWSDateTime: string
+      skipTypename: false
+      withHooks: true
+      withHOC: false
+      withComponent: false

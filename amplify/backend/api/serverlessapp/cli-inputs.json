@@ -9,10 +9,8 @@
     },
     "additionalAuthTypes": [
       {
-        "mode": "API_KEY",
-        "expirationTime": 300,
-        "apiKeyExpirationDate": "2022-11-25T06:30:55.818Z",
-        "keyDescription": ""
+        "mode": "AMAZON_COGNITO_USER_POOLS",
+        "cognitoUserPoolId": "authserverlessAppAuth"
       }
     ],
     "conflictResolution": {}

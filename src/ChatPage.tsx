@@ -1,18 +1,15 @@
 import { Box, Button, styled } from '@mui/material';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { AppContext } from './AppContext';
-import { CreateMessageDocument, CreateMessageInput, ListMessagesDocument, Message, OnCreateMessageDocument } from 'generated/graphql-request';
-import { useMutation, useQuery, useSubscription } from '@apollo/client';
+import { CreateMessageInput, Message, PostType, useListMessageSortedByDateQuery, ModelSortDirection, useCreateMessageMutation, useOnCreateMessageSubscription } from 'generated/graphql-request';
 /**
  * 入力欄の状態
  */
 type inputState = {
-    name: string;
     text: string;
 }
 
 const initialInput: inputState = {
-    name: '',
     text: '',
 }
 
@@ -30,28 +27,28 @@ const ChatPage = () => {
     const { state, dispatch } = useContext(AppContext);
     const [input, setInput] = useState(initialInput);
     // クエリ操作関係のフック
-    const query = useQuery(ListMessagesDocument, {
+    const query = useListMessageSortedByDateQuery({
+        variables: {
+            postType: PostType.Open,
+            sortDirection: ModelSortDirection.Asc,
+        },
         onCompleted: (data) => {
-            const messages = data.listMessages?.items ? (
-                data.listMessages.items as Message[]
+            const messages = data.listMessageSortedByDate?.items ? (
+                data.listMessageSortedByDate.items as Message[]
             ) : ([] as Message[])
             dispatch({ type: 'FETCH_SUCCESS', messages: messages })
-        }
-    });
+        },
+    })
     // データの変更関係のフック
-    const [mutateMessage] = useMutation(CreateMessageDocument);
+    const [addMessageHook] = useCreateMessageMutation()
     // データ購読のフック
-    const subscription = useSubscription(OnCreateMessageDocument, {
+    const subscription = useOnCreateMessageSubscription({
         onSubscriptionData: ({ client, subscriptionData }) => {
             if (subscriptionData.data?.onCreateMessage) {
                 dispatch({ type: 'SUBSCRIPTION_SUCCESS', message: subscriptionData.data.onCreateMessage })
             }
         }
-    });
-
-    const handleOnChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setInput({ ...input, name: e.target.value });
-    }
+    })
 
     const handleOnChangeText = (e: React.ChangeEvent<HTMLInputElement>) => {
         setInput({ ...input, text: e.target.value });
@@ -59,10 +56,10 @@ const ChatPage = () => {
 
     const addMessage = async () => {
         try {
-            if (!input.name || !input.text) return;
-            const message: CreateMessageInput = { ...input };
+            if (!input.text) return;
+            const message: CreateMessageInput = { ...input, postType: PostType.Open };
             setInput(initialInput);
-            mutateMessage({ variables: { input: message } })
+            addMessageHook({ variables: { input: message } })
             dispatch({ type: 'MUTATE_SUCCESS' });
         } catch (err) {
             console.log('Error adding message:', err);
@@ -80,7 +77,7 @@ const ChatPage = () => {
             <Box
                 key={message.id}
             >
-                <p>{message.name}</p>
+                <p>{message.owner}</p>
                 <p>{message.text}</p>
             </Box>
         ))
@@ -91,11 +88,6 @@ const ChatPage = () => {
     return (
         <div>
             <Box>
-                <input
-                    onChange={(e) => handleOnChangeName(e)}
-                    value={input.name}
-                    placeholder='名前'
-                />
                 <input
                     onChange={(e) => handleOnChangeText(e)}
                     value={input.text}
