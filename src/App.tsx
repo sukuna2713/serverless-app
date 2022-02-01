@@ -7,7 +7,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import TopPage from 'TopPage';
 import './App.css';
 import { AppContext } from './AppContext';
-import Message from './Message';
+import ChatPage from './ChatPage';
 import { initiateState } from './initialState';
 import { reducer } from './reducer';
 
@@ -21,7 +21,7 @@ const App = () => {
             <Route path='/' element={<TopPage />} />
             <Route path='/signup' element={<SignUp />} />
             <Route path='/signin' element={<SignIn />} />
-            <Route path='/mypage' element={<PrivateRoute path='/mypage'><Message /></PrivateRoute>} />
+            <Route path='/mypage' element={<PrivateRoute path='/mypage'><ChatPage /></PrivateRoute>} />
             <Route path='/*' element={<NotFoundPage />} />
           </Routes>
         </BrowserRouter>

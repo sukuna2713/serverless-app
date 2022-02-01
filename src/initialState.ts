@@ -1,7 +1,7 @@
-import { CreateMessageInput } from "API";
+import { Message } from "generated/graphql-request";
 
 export const initiateState: MessageState = {
     loading: false,
     error: '',
-    messages: [] as CreateMessageInput[]
+    messages: [] as Message[]
 }

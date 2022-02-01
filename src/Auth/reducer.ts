@@ -15,8 +15,9 @@ export const reducer = (state: AuthState, action: AuthAction): AuthState => (
             isLoading: false,
             isAuthenticated: false,
         }))
-        .with({ type: 'SIGNUP_SUCCESS', username: select('username'), email: select('email'), password: select('password') }, (selection) => ({
+        .with({ type: 'SIGNUP_SUCCESS', user: select('user'), username: select('username'), email: select('email'), password: select('password') }, (selection) => ({
             ...state,
+            user: selection.user,
             username: selection.username,
             email: selection.email,
             password: selection.password,
@@ -35,6 +36,10 @@ export const reducer = (state: AuthState, action: AuthAction): AuthState => (
             ...state,
             password: '',
             error: selection,
+        }))
+        .with({ type: 'GOT_CURRENT_USER', user: select() }, (selection) => ({
+            ...state,
+            user: selection,
         }))
         .with({ type: 'SIGNIN_SUCCESS', username: select() }, (selection) => ({
             ...state,

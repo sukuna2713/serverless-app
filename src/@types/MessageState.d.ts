@@ -1,5 +1,5 @@
 declare type MessageState = {
     loading: boolean;
     error: string;
-    messages: import('../API').CreateMessageInput[];
+    messages: import('../generated/graphql-request').Message[];
 }

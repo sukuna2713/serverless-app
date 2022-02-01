@@ -1,4 +1,5 @@
 import React, { useEffect, useContext, createContext, useReducer } from 'react';
+import { CognitoUser } from 'amazon-cognito-identity-js'
 import { Auth } from 'aws-amplify';
 import { reducer } from './reducer';
 import { initiateState } from './initiateState';
@@ -9,6 +10,7 @@ import { initiateState } from './initiateState';
 interface UseAuth {
     isLoading: boolean
     isAuthenticated: boolean
+    user?: CognitoUser
     username: string
     email: string
     signUp: (
@@ -53,16 +55,28 @@ const useProvideAuth = (): UseAuth => {
 
     useEffect(() => {
         // 最初の認証確認
-        dispatch({ type: 'ACCESS_START' });
-        Auth.currentAuthenticatedUser()
-            .then(() => {
-                // ログイン済みのとき
-                dispatch({ type: 'AUTHENTICATED' })
-            })
-            .catch(() => {
-                // 未ログインのとき
-                dispatch({ type: 'NOT_AUTHENTICATED' })
-            })
+        const checkAuthenticated = () => {
+            dispatch({ type: 'ACCESS_START' });
+            Auth.currentAuthenticatedUser()
+                .then(() => {
+                    // ログイン済みのとき
+                    dispatch({ type: 'AUTHENTICATED' })
+                })
+                .catch(() => {
+                    // 未ログインのとき
+                    dispatch({ type: 'NOT_AUTHENTICATED' })
+                })
+        }
+
+        // 現在のユーザ情報を取得
+        const currentAuthenticatedUser = async (): Promise<void> => {
+            const user: CognitoUser = await Auth.currentAuthenticatedUser();
+            dispatch({ type: 'GOT_CURRENT_USER', user: user })
+        }
+
+        checkAuthenticated();
+        currentAuthenticatedUser();
+
     }, [dispatch])
 
     const signUp = (
@@ -78,8 +92,8 @@ const useProvideAuth = (): UseAuth => {
                 email: email,
             }
         })
-            .then(() => {
-                dispatch({ type: 'SIGNUP_SUCCESS', username: username, email: email, password: password })
+            .then((result) => {
+                dispatch({ type: 'SIGNUP_SUCCESS', user: result.user, username: username, email: email, password: password })
                 callback({ isSuccessed: true, message: '' })
             })
             .catch(() => {
@@ -146,6 +160,7 @@ const useProvideAuth = (): UseAuth => {
     return {
         isLoading: state.isLoading,
         isAuthenticated: state.isAuthenticated,
+        user: state.user,
         username: state.username,
         email: state.email,
         signUp,
