@@ -1,7 +1,8 @@
-import { Box, Button, styled } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import React, { useContext, useState } from 'react';
 import { AppContext } from './AppContext';
 import { CreateMessageInput, Message, PostType, useListMessageSortedByDateQuery, ModelSortDirection, useCreateMessageMutation, useOnCreateMessageSubscription } from 'generated/graphql-request';
+import { MessageBox } from 'MessageBox';
 /**
  * 入力欄の状態
  */
@@ -12,15 +13,6 @@ type inputState = {
 const initialInput: inputState = {
     text: '',
 }
-
-/**
- * スタイル適用済のコンポーネント
- */
-const StyledBox = styled(Box)(() => ({
-    margin: 16,
-    height: 504,
-    overflow: 'auto'
-}))
 
 const ChatPage = () => {
     // Reducerと入力欄の状態
@@ -72,19 +64,6 @@ const ChatPage = () => {
         return <div>{query.error.message}</div>
     }
 
-    const messages = state.messages ? (
-        state.messages.map((message) => (
-            <Box
-                key={message.id}
-            >
-                <p>{message.owner}</p>
-                <p>{message.text}</p>
-            </Box>
-        ))
-    ) : (
-        <div>メッセージがありません</div>
-    )
-
     return (
         <div>
             <Box>
@@ -95,9 +74,7 @@ const ChatPage = () => {
                 />
                 <Button onClick={addMessage}>投稿</Button>
             </Box>
-            <StyledBox>
-                {messages}
-            </StyledBox>
+            <MessageBox />
         </div>
     )
 }
