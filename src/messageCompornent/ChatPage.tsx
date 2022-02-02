@@ -7,6 +7,7 @@ import { initialInput, initialMessage } from './initialState';
 import { reducer } from './reducer';
 import { InputContext } from './InputContext';
 import { SubmitBox } from './SubmitBox';
+import { BasicAppBar, ToolbarMargin } from 'BasicAppBar';
 
 const ChatPage = () => {
     // Reducerと入力欄の状態
@@ -56,6 +57,8 @@ const ChatPage = () => {
 
     return (
         <MessageContext.Provider value={{ messageState: state, dispatch }}>
+            <BasicAppBar />
+            <ToolbarMargin />
             <Container maxWidth="lg">
                 <MessageBox />
             </Container>

@@ -7,7 +7,7 @@ const TopPage = () => {
             <Button
                 variant='outlined'
                 color='primary'
-                href='/mypage'
+                href='/chatpage'
             >
                 MyPage
             </Button>

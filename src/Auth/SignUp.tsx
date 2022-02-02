@@ -144,7 +144,7 @@ const ConfirmForm = () => {
         auth.confirmSignUp(verificationCode, (result) => {
             if (result.isSuccessed) {
                 //ログイン成功ならばマイページに移動
-                navigate('/mypage')
+                navigate('/chatpage')
             }
         })
     }

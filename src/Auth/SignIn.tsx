@@ -49,7 +49,7 @@ export const SignIn = () => {
         auth.signIn(username, password, (result) => {
             if (result.isSuccessed) {
                 //ログイン成功ならマイページに移動
-                navigate('/mypage')
+                navigate('/chatpage')
             }
         })
     }

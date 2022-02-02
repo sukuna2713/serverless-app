@@ -1,4 +1,4 @@
-import { Card, CardContent, Grid, Stack, Typography } from "@mui/material";
+import { Box, Card, CardContent, Grid, Stack, Typography } from "@mui/material";
 import { MessageContext } from "./MessageContext"
 import { useAuth } from "Auth/use-auth";
 import { Message } from "generated/graphql-request";
@@ -54,13 +54,17 @@ export const MessageBox = () => {
     )
 
     return (
-        <Stack
-            direction="column"
-            justifyContent="flex-start"
-            alignItems="center"
-            spacing={{ xs: 2, md: 3 }}
+        <Box
+            sx={{ pb: 7 }}
         >
-            {messages}
-        </Stack>
+            <Stack
+                direction="column"
+                justifyContent="flex-start"
+                alignItems="center"
+                spacing={{ xs: 2, md: 3 }}
+            >
+                {messages}
+            </Stack>
+        </Box>
     )
 }
