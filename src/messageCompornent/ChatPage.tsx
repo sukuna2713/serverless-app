@@ -1,22 +1,16 @@
-import { Box, Button } from '@mui/material';
-import React, { useContext, useState } from 'react';
-import { AppContext } from './AppContext';
+import { Box, Button, Container } from '@mui/material';
+import React, { useContext, useReducer, useState } from 'react';
+import { MessageContext } from './MessageContext';
 import { CreateMessageInput, Message, PostType, useListMessageSortedByDateQuery, ModelSortDirection, useCreateMessageMutation, useOnCreateMessageSubscription } from 'generated/graphql-request';
-import { MessageBox } from 'MessageBox';
-/**
- * 入力欄の状態
- */
-type inputState = {
-    text: string;
-}
-
-const initialInput: inputState = {
-    text: '',
-}
+import { MessageBox } from './MessageBox';
+import { initialInput, initialMessage } from './initialState';
+import { reducer } from './reducer';
+import { InputContext } from './InputContext';
+import { SubmitBox } from './SubmitBox';
 
 const ChatPage = () => {
     // Reducerと入力欄の状態
-    const { state, dispatch } = useContext(AppContext);
+    const [state, dispatch] = useReducer(reducer, initialMessage)
     const [input, setInput] = useState(initialInput);
     // クエリ操作関係のフック
     const query = useListMessageSortedByDateQuery({
@@ -42,10 +36,6 @@ const ChatPage = () => {
         }
     })
 
-    const handleOnChangeText = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setInput({ ...input, text: e.target.value });
-    }
-
     const addMessage = async () => {
         try {
             if (!input.text) return;
@@ -65,17 +55,14 @@ const ChatPage = () => {
     }
 
     return (
-        <div>
-            <Box>
-                <input
-                    onChange={(e) => handleOnChangeText(e)}
-                    value={input.text}
-                    placeholder='メッセージ'
-                />
-                <Button onClick={addMessage}>投稿</Button>
-            </Box>
-            <MessageBox />
-        </div>
+        <MessageContext.Provider value={{ messageState: state, dispatch }}>
+            <Container maxWidth="lg">
+                <MessageBox />
+            </Container>
+            <InputContext.Provider value={{ input, setInput }}>
+                <SubmitBox onClick={addMessage} />
+            </InputContext.Provider>
+        </MessageContext.Provider>
     )
 }
 

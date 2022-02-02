@@ -1,6 +1,5 @@
-import { useApolloClient } from "@apollo/client";
-import { Box, Card, CardContent, Container, Grid, Paper, Stack, styled, Typography } from "@mui/material";
-import { AppContext } from "AppContext"
+import { Card, CardContent, Grid, Stack, Typography } from "@mui/material";
+import { MessageContext } from "./MessageContext"
 import { useAuth } from "Auth/use-auth";
 import { Message } from "generated/graphql-request";
 import { useContext } from "react"
@@ -32,18 +31,18 @@ const MessageCard = (props: Props) => {
 }
 
 export const MessageBox = () => {
-    const { state } = useContext(AppContext);
+    const { messageState } = useContext(MessageContext);
     const auth = useAuth()
 
     const isOwned = (message: Message) => (
         message.owner && message.owner === auth.username
     )
 
-    const messages = state.messages ? (
-        state.messages.map((message) => (
+    const messages = messageState.messages ? (
+        messageState.messages.map((message) => (
             <Grid
                 item
-                xs="auto"
+                xs={6}
                 key={message.id}
                 alignSelf={isOwned(message) ? "flex-end" : "flex-start"}
             >
@@ -55,15 +54,13 @@ export const MessageBox = () => {
     )
 
     return (
-        <Container maxWidth="lg">
-            <Stack
-                direction="column"
-                justifyContent="flex-start"
-                alignItems="center"
-                spacing={{ xs: 2, md: 3 }}
-            >
-                {messages}
-            </Stack>
-        </Container>
+        <Stack
+            direction="column"
+            justifyContent="flex-start"
+            alignItems="center"
+            spacing={{ xs: 2, md: 3 }}
+        >
+            {messages}
+        </Stack>
     )
 }
