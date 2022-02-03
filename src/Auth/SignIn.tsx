@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./use-auth";
-import { Avatar, Checkbox, FormControlLabel } from "@mui/material";
+import { Avatar } from "@mui/material";
 import { Button } from "@mui/material";
 import { CssBaseline } from "@mui/material";
 import { TextField } from "@mui/material";

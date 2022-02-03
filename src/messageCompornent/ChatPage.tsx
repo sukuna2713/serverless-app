@@ -1,5 +1,5 @@
-import { Box, Button, Container } from '@mui/material';
-import React, { useContext, useReducer, useState } from 'react';
+import { Container } from '@mui/material';
+import { useReducer, useState } from 'react';
 import { MessageContext } from './MessageContext';
 import { CreateMessageInput, Message, PostType, useListMessageSortedByDateQuery, ModelSortDirection, useCreateMessageMutation, useOnCreateMessageSubscription } from 'generated/graphql-request';
 import { MessageBox } from './MessageBox';
@@ -59,7 +59,7 @@ const ChatPage = () => {
         <MessageContext.Provider value={{ messageState: state, dispatch }}>
             <BasicAppBar />
             <ToolbarMargin />
-            <Container maxWidth="lg">
+            <Container maxWidth="lg" sx={{ overflow: 'auto', maxHeight: '75%' }}>
                 <MessageBox />
             </Container>
             <InputContext.Provider value={{ input, setInput }}>

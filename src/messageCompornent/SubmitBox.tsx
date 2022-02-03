@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { InputContext } from "./InputContext";
-import { Box, Button, Grid, TextField } from "@mui/material";
+import { Button, Grid, TextField } from "@mui/material";
 
 type Props = {
     onClick: () => void
