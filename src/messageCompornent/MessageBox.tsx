@@ -5,13 +5,17 @@ import { Message } from "generated/graphql-request";
 import { useContext } from "react"
 
 type Props = {
-    message: Message
+    message: Message;
+    isOwned: boolean;
 }
 
 const MessageCard = (props: Props) => {
     return (
         <Card
-            sx={{ minWidth: 30 }}
+            sx={{
+                minWidth: 30,
+                backgroundColor: props.isOwned ? 'lightgreen' : 'lightblue'
+            }}
             elevation={4}
         >
             <CardContent>
@@ -46,7 +50,7 @@ export const MessageBox = () => {
                 key={message.id}
                 alignSelf={isOwned(message) ? "flex-end" : "flex-start"}
             >
-                <MessageCard message={message} />
+                <MessageCard message={message} isOwned={isOwned(message) ? true : false} />
             </Grid>
         ))
     ) : (
