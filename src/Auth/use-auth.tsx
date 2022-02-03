@@ -31,7 +31,7 @@ interface UseAuth {
     signOut: (callback: (r: Result) => void) => void
 }
 
-interface Result {
+export interface Result {
     isSuccessed: boolean
     message: string
 }
@@ -58,9 +58,9 @@ const useProvideAuth = (): UseAuth => {
         const checkAuthenticated = () => {
             dispatch({ type: 'ACCESS_START' });
             Auth.currentAuthenticatedUser()
-                .then(() => {
+                .then((user: CognitoUser) => {
                     // ログイン済みのとき
-                    dispatch({ type: 'AUTHENTICATED' })
+                    dispatch({ type: 'GOT_CURRENT_USER', user: user })
                 })
                 .catch(() => {
                     // 未ログインのとき
@@ -71,11 +71,11 @@ const useProvideAuth = (): UseAuth => {
         // 現在のユーザ情報を取得
         const currentAuthenticatedUser = async (): Promise<void> => {
             const user: CognitoUser = await Auth.currentAuthenticatedUser();
-            dispatch({ type: 'GOT_CURRENT_USER', user: user })
+            if (user) dispatch({ type: 'GOT_CURRENT_USER', user: user })
         }
 
         checkAuthenticated();
-        currentAuthenticatedUser();
+        //currentAuthenticatedUser();
 
     }, [dispatch])
 

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "./use-auth";
+import { Result, useAuth } from "./use-auth";
 import { Avatar } from "@mui/material";
 import { Button } from "@mui/material";
 import { CssBaseline } from "@mui/material";
@@ -46,11 +46,22 @@ const SignUpForm = () => {
     const [username, setUsername] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [result, setResult] = useState<Result>({ isSuccessed: true, message: '' })
     //サインアップ処理
     const executeSignUp = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
-        auth.signUp(username, email, password, () => { })
+        auth.signUp(username, email, password, (r: Result) => {
+            setResult(r);
+        })
     }
+
+    const isLegalProps = (username: string, email: string, password: string) => {
+        if (!username || !email || !password) return false;
+        // パスワードが8文字以上かつ英数字、大小文字が含まれているかチェック
+        const rall = /^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])/;
+        return rall.test(password);
+    }
+
     return (
         <Container component="main" maxWidth="xs">
             <CssBaseline />
@@ -112,10 +123,18 @@ const SignUpForm = () => {
                         fullWidth
                         variant="contained"
                         color="primary"
+                        disabled={!isLegalProps(username, email, password)}
                     >
                         新規登録
                     </StyledSubmit>
                     <Grid container justifyContent="flex-end">
+                        {result.isSuccessed === false ? (
+                            <Grid item>
+                                <Typography color="error">
+                                    {result.message}
+                                </Typography>
+                            </Grid>
+                        ) : (<div></div>)}
                         <Grid item>
                             <Link href="/signin" variant="body2">
                                 ログインはこちら
@@ -137,14 +156,18 @@ const SignUpForm = () => {
 const ConfirmForm = () => {
     const auth = useAuth()
     const navigate = useNavigate()
+    const [result, setResult] = useState<Result>({ isSuccessed: true, message: '' })
     const [verificationCode, setVerificationCode] = useState('')
     //認証コード確認
     const executeConfirm = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         auth.confirmSignUp(verificationCode, (result) => {
             if (result.isSuccessed) {
+                setResult(result);
                 //ログイン成功ならばマイページに移動
-                navigate('/chatpage')
+                navigate('/chatpage');
+            } else {
+                setResult(result);
             }
         })
     }
@@ -179,6 +202,7 @@ const ConfirmForm = () => {
                         fullWidth
                         variant="contained"
                         color="primary"
+                        disabled={verificationCode ? false : true}
                     >
                         認証
                     </StyledSubmit>

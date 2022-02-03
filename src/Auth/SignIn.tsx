@@ -53,6 +53,12 @@ export const SignIn = () => {
             }
         })
     }
+    const isLegalProps = (username: string, password: string) => {
+        if (!username || !password) return false;
+        // パスワードが8文字以上かつ英数字、大小文字が含まれているかチェック
+        const rall = /^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])/;
+        return rall.test(password);
+    }
     return (
         <Container component="main" maxWidth="xs">
             <CssBaseline />
@@ -92,24 +98,16 @@ export const SignIn = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
-                    <FormControlLabel
-                        control={<Checkbox value="remember" color="primary" />}
-                        label="次回から自動でログインする"
-                    />
                     <StyledSubmit
                         type="submit"
                         fullWidth
                         variant="contained"
                         color="primary"
+                        disabled={!isLegalProps(username, password)}
                     >
                         ログイン
                     </StyledSubmit>
                     <Grid container>
-                        <Grid item xs>
-                            <Link href="#" variant="body2">
-                                パスワードを忘れた場合はこちら
-                            </Link>
-                        </Grid>
                         <Grid item>
                             <Link href="/signup" variant="body2">
                                 新規登録はこちら

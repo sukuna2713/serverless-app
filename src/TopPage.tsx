@@ -1,8 +1,11 @@
 import { Button } from "@mui/material"
+import { BasicAppBar, ToolbarMargin } from "BasicAppBar";
 
 const TopPage = () => {
     return (
         <div>
+            <BasicAppBar />
+            <ToolbarMargin />
             <p>トップページ</p>
             <Button
                 variant='outlined'
