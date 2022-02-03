@@ -16,5 +16,23 @@
         "serverlessAppAuth": {}
       }
     }
+  },
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-serverlessapp-staging-101923-authRole",
+      "UnauthRoleArn": "arn:aws:iam::501002473714:role/amplify-serverlessapp-staging-101923-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::501002473714:role/amplify-serverlessapp-staging-101923-authRole",
+      "Region": "ap-northeast-1",
+      "DeploymentBucketName": "amplify-serverlessapp-staging-101923-deployment",
+      "UnauthRoleName": "amplify-serverlessapp-staging-101923-unauthRole",
+      "StackName": "amplify-serverlessapp-staging-101923",
+      "StackId": "arn:aws:cloudformation:ap-northeast-1:501002473714:stack/amplify-serverlessapp-staging-101923/c2dcccf0-84da-11ec-83ef-0649c6a29113",
+      "AmplifyAppId": "d3vb40mhoj5kur"
+    },
+    "categories": {
+      "auth": {
+        "serverlessAppAuth": {}
+      }
+    }
   }
 }

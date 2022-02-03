@@ -35,7 +35,7 @@ export const MessageBox = () => {
     const auth = useAuth()
 
     const isOwned = (message: Message) => (
-        message.owner && message.owner === auth.username
+        message.owner && !message.owner.localeCompare(auth.username, 'jp', { sensitivity: 'base' })
     )
 
     const messages = messageState.messages ? (
